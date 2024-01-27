@@ -13,5 +13,9 @@ export default (req, res, next) => {
 				message: 'Нет доступа',
 			})
 		}
+	} else {
+		return res.status(400).json({
+			message: 'Нет доступа',
+		})
 	}
 }

@@ -2,6 +2,10 @@ import { model, Schema } from 'mongoose'
 
 const User = new Schema(
 	{
+		avatarUrl: {
+			type: String,
+			default: 'https://i.ibb.co/phnsrwX/avatar-Url-default.jpg',
+		},
 		fio: {
 			type: String,
 			required: true,
@@ -16,6 +20,10 @@ const User = new Schema(
 			required: true,
 		},
 		status: {
+			type: String,
+			required: true,
+		},
+		gender: {
 			type: String,
 			required: true,
 		},

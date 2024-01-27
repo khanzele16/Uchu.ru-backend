@@ -55,8 +55,7 @@ export async function login(req, res) {
 
 export async function register(req, res) {
 	try {
-		const { fio, email, password, status, about } = req.body
-		const condidate = await User.findOne({ email })
+		const condidate = await User.findOne(req.body.email)
 		if (condidate) {
 			return res.status(400).json({
 				message: 'Пользователь с данной почтой уже существует',
@@ -65,11 +64,12 @@ export async function register(req, res) {
 		const salt = await bcrypt.genSalt(10)
 		const hash = await bcrypt.hash(password, salt)
 		const user = new User({
-			fio,
-			email,
+			fio: req.body.fio,
+			email: req.body.email,
 			passwordHash: hash,
-			status,
-			about,
+			status: req.body.status,
+			about: req.body.about,
+			gender: req.body.gender,
 		})
 		await user.save()
 		const token = jwt.sign(
@@ -115,7 +115,7 @@ export async function authMe(req, res) {
 				message: 'Пользователь не найден',
 			})
 		}
-		const {passwordHash, ...userData} = user
+		const { passwordHash, ...userData } = user
 		return res.json(userData)
 	} catch (err) {
 		return res.status(500).json({
