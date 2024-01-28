@@ -55,14 +55,15 @@ export async function login(req, res) {
 
 export async function register(req, res) {
 	try {
-		const condidate = await User.findOne(req.body.email)
+		const email = req.body.email
+		const condidate = await User.findOne({ email })
 		if (condidate) {
 			return res.status(400).json({
 				message: 'Пользователь с данной почтой уже существует',
 			})
 		}
 		const salt = await bcrypt.genSalt(10)
-		const hash = await bcrypt.hash(password, salt)
+		const hash = await bcrypt.hash(req.body.password, salt)
 		const user = new User({
 			fio: req.body.fio,
 			email: req.body.email,
