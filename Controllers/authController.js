@@ -53,6 +53,38 @@ export async function login(req, res) {
 	}
 }
 
+export async function update(req, res) {
+	try {
+		const { email, about } = req.body
+		const user = await User.findOne({ email })
+		if (!user) {
+			return res.status(400).json({
+				message: 'Не удалось найти пользователя',
+			})
+		}
+		if (!req.body.password) {
+			await user.updateOne({
+				about,
+			})
+		} else {
+			const salt = await bcrypt.genSalt(10)
+			const hash = await bcrypt.hash(req.body.password, salt)
+			await user.updateOne({
+				passwordHash: hash,
+				about,
+			})
+		}
+		return res.json({
+			message: 'Пользователь обновлён',
+		})
+	} catch (err) {
+		console.log(err)
+		return res.status(500).json({
+			message: 'Не удалось обновить пользователя',
+		})
+	}
+}
+
 export async function register(req, res) {
 	try {
 		const email = req.body.email

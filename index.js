@@ -13,6 +13,7 @@ import {
 	register,
 	login,
 	authMe,
+	update,
 } from './Controllers/authController.js'
 import cors from 'cors'
 import checkAuth from './checkAuth.js'
@@ -34,8 +35,9 @@ app.get('/posts/:id', getOne)
 app.post('/posts', createOne)
 app.delete('/posts/:id', deleteOne)
 // AuthController
-app.post('/auth/register', register)
 app.post('/auth/login', login)
+app.post('/auth/update', update)
+app.post('/auth/register', register)
 app.get('/auth/me', checkAuth, authMe)
 //Admin Panel (auth)
 app.get('/admin/users', getUsers)
