@@ -14,6 +14,9 @@ import {
 	login,
 	authMe,
 	update,
+	setExercise,
+	getResults,
+	getResult,
 } from './Controllers/authController.js'
 import cors from 'cors'
 import checkAuth from './checkAuth.js'
@@ -29,6 +32,10 @@ const app = express()
 // Configurations
 app.use(express.json())
 app.use(cors())
+//ResultController
+app.get('/result', checkAuth, getResults)
+app.get('/result/:id', checkAuth, getResult)
+app.post('/result', checkAuth, setExercise)
 // PostController
 app.get('/posts', getAll)
 app.get('/posts/:id', getOne)

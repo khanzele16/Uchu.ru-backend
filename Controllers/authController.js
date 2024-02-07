@@ -156,3 +156,91 @@ export async function authMe(req, res) {
 		})
 	}
 }
+
+export async function setExercise(req, res) {
+	try {
+		const user = await User.findById(req.userId)
+		if (!user) {
+			return res.status(400).json({
+				message: 'Пользователь не был найден',
+			})
+		}
+		const findIndex =
+			user.statistic.exercise[
+				user.statistic.exercise.findIndex(el => el.id == req.body.id)
+			]
+		if (findIndex?.result == 'right') {
+			return res.json({
+				message: 'Задания было решено',
+			})
+		} else if (findIndex?.result == 'bad') {
+			await user.updateOne(
+				{
+					$set: {
+						'statistic.exercise.$[element].result': req.body.result,
+					},
+				},
+				{ arrayFilters: [{ 'element.id': req.body.id }] }
+			)
+		} else {
+			await user.updateOne({
+				$push: {
+					'statistic.exercise': {
+						id: req.body.id,
+						result: req.body.result,
+					},
+				},
+			})
+		}
+		return res.json({
+			message: 'Задание было добавлено',
+		})
+	} catch (err) {
+		console.log(err)
+		return res.status(500).json({
+			message: 'Не удалось установить результат',
+		})
+	}
+}
+
+export async function getResults(req, res) {
+	try {
+		const user = await User.findById(req.userId)
+		if (!user) {
+			return res.status(400).json({
+				message: 'Пользователь не был найден',
+			})
+		}
+		return res.json(user.statistic)
+	} catch (err) {
+		console.log(err)
+		return res.status(500).json({
+			message: 'Не удалось установить результат',
+		})
+	}
+}
+
+export async function getResult(req, res) {
+	try {
+		const user = await User.findById(req.userId)
+		if (!user) {
+			return res.status(400).json({
+				message: 'Пользователь не был найден',
+			})
+		}
+		const result = user.statistic?.exercise.find(el =>
+			el.id == req.params.id ? el : undefined
+		)
+		if (!result) {
+			return res.status(400).json({
+				message: 'Задание не было решено',
+			})
+		}
+		return res.json(result)
+	} catch (err) {
+		console.log(err)
+		return res.status(500).json({
+			message: 'Не удалось узнать результат',
+		})
+	}
+}

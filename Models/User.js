@@ -31,6 +31,13 @@ const User = new Schema(
 			type: String,
 			default: 'Я готовлюсь на Uchu.ru. Присоединяйся!',
 		},
+		statistic: {
+			type: Object,
+			default: {
+				exercise: [],
+				variants: [],
+			},
+		},
 	},
 	{
 		timestamps: true,
