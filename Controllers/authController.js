@@ -188,6 +188,8 @@ export async function setExercise(req, res) {
 					'statistic.exercise': {
 						id: req.body.id,
 						result: req.body.result,
+						answer: req.body.answer,
+						createdAt: req.body.createdAt,
 					},
 				},
 			})
@@ -205,7 +207,7 @@ export async function setExercise(req, res) {
 
 export async function getResults(req, res) {
 	try {
-		const user = await User.findById(req.userId)
+		const user = await User.findById(req.userId).sort({ createdAt: 1 })
 		if (!user) {
 			return res.status(400).json({
 				message: 'Пользователь не был найден',
